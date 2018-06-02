@@ -32,6 +32,11 @@ uint64_t kernel_base = 0;
 #define REFILL_USERCLIENTS_COUNT 1000
 #define MAX_PEEKS 30000
 
+void panic_now() {
+    int a;
+    mach_make_memory_entry_64(mach_task_self(),&a,0,0,0,-1);
+}
+
 static void _init_port_with_empty_msg(mach_port_t port)
 {
     uint8_t buf[256];
@@ -176,7 +181,10 @@ void jb_go(void)
     if (peeks >= MAX_PEEKS) {
         printf("Didn't find corrupt port");
         sleep(1);
-        exit(0);
+        for (int i = 0x20; i < FIRST_PORTS_COUNT; ++i) {
+            mach_port_destroy(mach_task_self(), first_ports[i]);
+        }
+        panic_now();
     }
     
     
