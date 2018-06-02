@@ -12,7 +12,7 @@
 //             a GUI.
 //
 
-#ifndef qilin_h./Developer/Xcode/DerivedData/LiberiOS-eprgauhokruyejdrgttigzlnmnde/Build/Intermediates.noindex/LiberiOS.build
+#ifndef qilin_h
 #define qilin_h
 #include <mach/mach.h>
 #include <unistd.h>

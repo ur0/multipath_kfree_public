@@ -19,7 +19,7 @@ uint64_t* receive_prealloc_msg(mach_port_t port);
 
 typedef mach_port_t io_service_t;
 typedef mach_port_t io_connect_t;
-io_connect_t alloc_userclient();
+io_connect_t alloc_userclient(void);
 
 // Kernel RWX
 
