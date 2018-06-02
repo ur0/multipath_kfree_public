@@ -29,6 +29,7 @@ ExploitOffsets init_offsets_iPhone81_11_3_1() {
     offsets.kernel_task = 0xfffffff0075d5048;
     offsets.kernel_map = 0xfffffff0075d5050;
     offsets.allproc = 0xFFFFFFF00777FC68;
+    offsets.kernproc = 0xfffffff0075d50a0;
     return offsets;
 }
 

