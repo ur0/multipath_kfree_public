@@ -20,7 +20,6 @@ uint64_t* receive_prealloc_msg(mach_port_t port);
 typedef mach_port_t io_service_t;
 typedef mach_port_t io_connect_t;
 io_connect_t alloc_userclient(void);
-
 // Kernel RWX
 
 void kx_setup(io_connect_t *ucs, mach_port_t *lazy_ports, uint64_t kaslr_shift, uint64_t kernel_buffer_base);

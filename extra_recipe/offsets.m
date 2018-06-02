@@ -21,7 +21,7 @@ ExploitOffsets offsets = {
 
 
 ExploitOffsets init_offsets_iPhone81_11_3_1() {
-    ExploitOffsets offsets = {0};
+    ExploitOffsets offsets = {};
     offsets.metaclass = 0xfffffff0074c5410;
     offsets.rootvnode = 0xfffffff0075d5088;
     offsets.copyin = 0xfffffff0071a7090;
@@ -32,6 +32,49 @@ ExploitOffsets init_offsets_iPhone81_11_3_1() {
     offsets.kernproc = 0xfffffff0075d50a0;
     return offsets;
 }
+
+
+ExploitOffsets init_offsets_iPhone82_11_3_1() {
+    ExploitOffsets offsets = {};
+
+    return  offsets;
+}
+
+ExploitOffsets init_offsets_iPhone83_11_3_1() {
+    ExploitOffsets offsets = {};
+    return  offsets;
+}
+
+ExploitOffsets init_offsets_iPhone84_11_3_1() {
+    ExploitOffsets offsets = {};
+    offsets.metaclass = 0;
+    offsets.rootvnode = 0xfffffff0075d5088;
+    offsets.copyin = 0xfffffff0071a7090;
+    offsets.copyout = 0xfffffff0071a72b4;
+    offsets.kernel_task = 0xfffffff0075d5048;
+    offsets.kernel_map = 0xfffffff0075d5050;
+    offsets.realhost = 0xfffffff0075dab98;
+    offsets.kernproc = 0;
+    offsets.allproc = 0;
+    return  offsets;
+}
+
+ExploitOffsets init_offsets_iPhone91_11_3_1() {
+    ExploitOffsets offsets = {};
+    return  offsets;
+}
+
+ExploitOffsets init_offsets_iPhone92_11_3_1() {
+    ExploitOffsets offsets = {};
+    return  offsets;
+}
+
+ExploitOffsets init_offsets_iPhone93_11_3_1() {
+    ExploitOffsets offsets = {};
+    return  offsets;
+}
+
+
 
 void init_offsets() {
     size_t size = 32;
@@ -56,12 +99,34 @@ void init_offsets() {
     // set the offsets
     
     if (strcmp(build_id, "15E302") == 0) {
-        offsets = init_offsets_iPhone81_11_3_1();
+        
+        //iPhone 6 Global
+        if(strcmp(u.machine, "iPhone7,1") == 0) {
+            
+        }
+        
+        //iPhone 6 CDMA
+        else if(strcmp(u.machine, "iPhone7,2") == 0) {
+            
+        }
+        
+        //iPhone 6S Global
+        else if(strcmp(u.machine, "iPhone8,1") == 0) {
+             offsets = init_offsets_iPhone81_11_3_1();
+        }
+        
+        else if(strcmp(u.machine, "iPhone8,4") == 0) {
+            offsets = init_offsets_iPhone84_11_3_1();
+            
+        } else {
+            
+        }
     } else {
         printf("unknown kernel build. If this is iOS 11 it might still be able to get tfp0, trying anyway\n");
         hasOffsets = 0;
         return;
     }
+    
 }
 
 

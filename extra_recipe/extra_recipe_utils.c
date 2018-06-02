@@ -2,6 +2,7 @@
 // https://bugs.chromium.org/p/project-zero/issues/detail?id=1004
 
 #include "offsets.h"
+#include "extra_recipe_utils.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -90,6 +91,14 @@ kern_return_t mach_vm_deallocate
  mach_vm_address_t address,
  mach_vm_size_t size
  );
+
+struct ool_msg  {
+    mach_msg_header_t hdr;
+    mach_msg_body_t body;
+    mach_msg_ool_ports_descriptor_t ool_ports;
+};
+
+
 
 mach_port_t prealloc_port(int size) {
     kern_return_t err;

