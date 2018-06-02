@@ -380,18 +380,33 @@ uint64_t kread64(uint64_t addr)
 
 void kwrite(uint64_t addr, uint8_t *userspace, int n)
 {
+<<<<<<< HEAD
     uint64_t copyin = 0xfffffff0071aa804 + _kaslr_shift;
     kx3(copyin, addr, userspace, n);
+=======
+    uint64_t copyin = 0xfffffff0071f5058 + _kaslr_shift;
+    kx3(copyin, userspace, addr, n);
+>>>>>>> potmdehex/master
 }
 
 void kwrite32(uint64_t addr, uint32_t value)
 {
+<<<<<<< HEAD
     uint64_t copyin = 0xfffffff0071aa804 + _kaslr_shift;
     kx3(copyin, addr, &value, sizeof(value));
+=======
+    uint64_t copyin = 0xfffffff0071f5058 + _kaslr_shift;
+    kx3(copyin, &value, addr, sizeof(value));
+>>>>>>> potmdehex/master
 }
 
 void kwrite64(uint64_t addr, uint64_t value)
 {
+<<<<<<< HEAD
     uint64_t copyin = 0xfffffff0071aa804+ _kaslr_shift;
     kx3(copyin, addr, &value, sizeof(value));
+=======
+    uint64_t copyin = 0xfffffff0071f5058 + _kaslr_shift;
+    kx3(copyin, &value, addr, sizeof(value));
+>>>>>>> potmdehex/master
 }
