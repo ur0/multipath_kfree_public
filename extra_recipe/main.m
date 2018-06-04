@@ -32,7 +32,14 @@ int main(int argc, char * argv[]) {
     stdoutPath = (char*)[[[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject] stringByAppendingString:@"/stdout"] UTF8String];
     remove(stdoutPath);
     if(DebuggerAttached()) {
-        printf("Hi there Xcode, thank you for debugging me!\n\n");
+        printf("\n\
+               ██╗  ██╗ ██████╗ ██████╗ ██████╗ ███████╗\n\
+               ╚██╗██╔╝██╔════╝██╔═══██╗██╔══██╗██╔════╝\n\
+               ╚███╔╝ ██║     ██║   ██║██║  ██║█████╗\n\
+               ██╔██╗ ██║     ██║   ██║██║  ██║██╔══╝\n\
+               ██╔╝ ██╗╚██████╗╚██████╔╝██████╔╝███████╗\n\
+               ╚═╝  ╚═╝ ╚═════╝ ╚═════╝ ╚═════╝ ╚══════╝\n\
+               \nHello there debugger, thanks for debugging me, but I might be unreliable with big brother watching me (kernel panics).\n\n\n");
         int debugserver_pid = getppid();
         printf("Debug server process id: %d group process id: %d\n", (debugserver_pid != 1) ? debugserver_pid : -1, getpgid(getpid()));
         debuggerAttached = true;
