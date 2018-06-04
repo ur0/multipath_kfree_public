@@ -35,8 +35,8 @@ int main(int argc, char * argv[]) {
         printf("\n\
                ██╗  ██╗ ██████╗ ██████╗ ██████╗ ███████╗\n\
                ╚██╗██╔╝██╔════╝██╔═══██╗██╔══██╗██╔════╝\n\
-               ╚███╔╝ ██║     ██║   ██║██║  ██║█████╗\n\
-               ██╔██╗ ██║     ██║   ██║██║  ██║██╔══╝\n\
+                ╚███╔╝ ██║     ██║   ██║██║  ██║█████╗\n\
+                ██╔██╗ ██║     ██║   ██║██║  ██║██╔══╝\n\
                ██╔╝ ██╗╚██████╗╚██████╔╝██████╔╝███████╗\n\
                ╚═╝  ╚═╝ ╚═════╝ ╚═════╝ ╚═════╝ ╚══════╝\n\
                \nHello there debugger, thanks for debugging me, but I might be unreliable with big brother watching me (kernel panics).\n\n\n");
