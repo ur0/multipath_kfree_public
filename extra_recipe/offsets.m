@@ -30,6 +30,8 @@ ExploitOffsets init_offsets_iPhone81_11_3_1() {
     offsets.kernel_map = 0xfffffff0075d5050;
     offsets.allproc = 0xFFFFFFF00777FC68;
     offsets.kernproc = 0xfffffff0075d50a0;
+    offsets.AGXCommandQueue_vtable = 0xfffffff006ffa3d0;
+    offsets.osserializer_serialize = 0xFFFFFFF0074DC3C8;
     return offsets;
 }
 
@@ -74,7 +76,21 @@ ExploitOffsets init_offsets_iPhone93_11_3_1() {
     return  offsets;
 }
 
+//iPhone X 15E302
+ExploitOffsets init_offsets_iPhone103_11_3_1() {
+    ExploitOffsets offsets = {};
+    offsets.kernproc = 0xfffffff0076450a8;;
+    offsets.AGXCommandQueue_vtable = 0xfffffff006fdd978;
+    return offsets;
+}
 
+//iPad Air 2 (WiFi)
+ExploitOffsets init_offsets_iPad53_11_3_1() {
+    ExploitOffsets offsets = {};
+    offsets.kernproc = 0xfffffff0075dd0a0;
+    offsets.AGXCommandQueue_vtable = 0xfffffff006fd9dd0;
+    return offsets;
+}
 
 void init_offsets() {
     size_t size = 32;

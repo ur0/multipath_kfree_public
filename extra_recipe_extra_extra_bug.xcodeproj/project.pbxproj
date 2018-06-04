@@ -9,9 +9,6 @@
 /* Begin PBXBuildFile section */
 		12242AA520C1BAF400B28377 /* multipath_kfree.c in Sources */ = {isa = PBXBuildFile; fileRef = 12242AA120C1BAF300B28377 /* multipath_kfree.c */; };
 		12242AA620C1BAF400B28377 /* extra_recipe_utils.c in Sources */ = {isa = PBXBuildFile; fileRef = 12242AA220C1BAF300B28377 /* extra_recipe_utils.c */; };
-		1260990B20C2C9680095B5C1 /* sha256.o in Frameworks */ = {isa = PBXBuildFile; fileRef = 1260990820C2C9670095B5C1 /* sha256.o */; };
-		1260990C20C2C9680095B5C1 /* qilin_tfp0less.o in Frameworks */ = {isa = PBXBuildFile; fileRef = 1260990920C2C9670095B5C1 /* qilin_tfp0less.o */; };
-		1260990D20C2C9680095B5C1 /* sha1.o in Frameworks */ = {isa = PBXBuildFile; fileRef = 1260990A20C2C9670095B5C1 /* sha1.o */; };
 		B0F37BC81E361EAE00179E85 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B0F37BC71E361EAE00179E85 /* Assets.xcassets */; };
 		B0F37BD51E361FCC00179E85 /* jailbreak.c in Sources */ = {isa = PBXBuildFile; fileRef = B0F37BD31E361FCC00179E85 /* jailbreak.c */; };
 		B0F37BDE1E37AC0700179E85 /* load_regs_and_crash.s in Sources */ = {isa = PBXBuildFile; fileRef = B0F37BDD1E37AC0700179E85 /* load_regs_and_crash.s */; };
@@ -22,10 +19,16 @@
 		EA05336E20C2D561003D43FC /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EA05336D20C2D561003D43FC /* Main.storyboard */; };
 		EA05337020C2D561003D43FC /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EA05336F20C2D561003D43FC /* LaunchScreen.storyboard */; };
 		EA05337220C2D561003D43FC /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = EA05337120C2D561003D43FC /* main.m */; };
+		EA28D8FA20C58438003372D6 /* sha1.o in Frameworks */ = {isa = PBXBuildFile; fileRef = 1260990A20C2C9670095B5C1 /* sha1.o */; };
+		EA28D8FB20C58438003372D6 /* sha256.o in Frameworks */ = {isa = PBXBuildFile; fileRef = 1260990820C2C9670095B5C1 /* sha256.o */; };
+		EA28D8FC20C58441003372D6 /* qilin_tfp0less.o in Frameworks */ = {isa = PBXBuildFile; fileRef = 1260990920C2C9670095B5C1 /* qilin_tfp0less.o */; };
+		EA28DB0B20C585F1003372D6 /* iosbinpack64 in Resources */ = {isa = PBXBuildFile; fileRef = EA28DB0A20C585F1003372D6 /* iosbinpack64 */; };
+		EA28DB0D20C58808003372D6 /* libmtftp.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = EA28DB0C20C58808003372D6 /* libmtftp.dylib */; };
+		EA28DB1020C58932003372D6 /* libiconv.2.4.0.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = EA28DB0F20C58932003372D6 /* libiconv.2.4.0.tbd */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		12242A8A20C1B84900B28377 /* extra_recipe.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = extra_recipe.entitlements; sourceTree = "<group>"; };
+		12242A8A20C1B84900B28377 /* extra_recipe.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = extra_recipe.entitlements; path = extra_recipe/extra_recipe.entitlements; sourceTree = SOURCE_ROOT; };
 		12242AA120C1BAF300B28377 /* multipath_kfree.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = multipath_kfree.c; sourceTree = "<group>"; };
 		12242AA220C1BAF300B28377 /* extra_recipe_utils.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = extra_recipe_utils.c; sourceTree = "<group>"; };
 		12242AA320C1BAF300B28377 /* extra_recipe_utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = extra_recipe_utils.h; sourceTree = "<group>"; };
@@ -47,10 +50,14 @@
 		EA052CF020C351F0000FB719 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = ViewController.m; path = ../Desktop/XNUFuzzer/XNUFuzzer/Controllers/ViewController.m; sourceTree = SOURCE_ROOT; };
 		EA05336420C2D554003D43FC /* offsets.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = offsets.m; sourceTree = "<group>"; };
 		EA05336620C2D561003D43FC /* offsets.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = offsets.h; sourceTree = "<group>"; };
-		EA05336D20C2D561003D43FC /* Main.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
-		EA05336F20C2D561003D43FC /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
+		EA05336D20C2D561003D43FC /* Main.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Main.storyboard; path = extra_recipe/Main.storyboard; sourceTree = SOURCE_ROOT; };
+		EA05336F20C2D561003D43FC /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = extra_recipe/LaunchScreen.storyboard; sourceTree = SOURCE_ROOT; };
 		EA05337120C2D561003D43FC /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		EA05337320C2D561003D43FC /* jailbreak.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = jailbreak.h; sourceTree = "<group>"; };
+		EA28DB0A20C585F1003372D6 /* iosbinpack64 */ = {isa = PBXFileReference; lastKnownFileType = folder; path = iosbinpack64; sourceTree = "<group>"; };
+		EA28DB0C20C58808003372D6 /* libmtftp.dylib */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libmtftp.dylib; path = extra_recipe/libmtftp.dylib; sourceTree = "<group>"; };
+		EA28DB0E20C588C3003372D6 /* pureftpd.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = pureftpd.h; sourceTree = "<group>"; };
+		EA28DB0F20C58932003372D6 /* libiconv.2.4.0.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libiconv.2.4.0.tbd; path = usr/lib/libiconv.2.4.0.tbd; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,9 +65,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1260990D20C2C9680095B5C1 /* sha1.o in Frameworks */,
-				1260990C20C2C9680095B5C1 /* qilin_tfp0less.o in Frameworks */,
-				1260990B20C2C9680095B5C1 /* sha256.o in Frameworks */,
+				EA28DB1020C58932003372D6 /* libiconv.2.4.0.tbd in Frameworks */,
+				EA28D8FC20C58441003372D6 /* qilin_tfp0less.o in Frameworks */,
+				EA28D8FA20C58438003372D6 /* sha1.o in Frameworks */,
+				EA28D8FB20C58438003372D6 /* sha256.o in Frameworks */,
+				EA28DB0D20C58808003372D6 /* libmtftp.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -70,8 +79,10 @@
 		B0F37BB41E361EAD00179E85 = {
 			isa = PBXGroup;
 			children = (
+				EA28DB0A20C585F1003372D6 /* iosbinpack64 */,
 				B0F37BBF1E361EAE00179E85 /* extra_recipe */,
 				B0F37BBE1E361EAE00179E85 /* Products */,
+				EA28D8F920C58438003372D6 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -126,6 +137,15 @@
 			name = Views;
 			sourceTree = "<group>";
 		};
+		EA28D8F920C58438003372D6 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				EA28DB0F20C58932003372D6 /* libiconv.2.4.0.tbd */,
+				EA28DB0C20C58808003372D6 /* libmtftp.dylib */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		EA91EEA420C35293008E3C7A /* Logic */ = {
 			isa = PBXGroup;
 			children = (
@@ -154,6 +174,7 @@
 				EA05336420C2D554003D43FC /* offsets.m */,
 				12242AA420C1BAF300B28377 /* multipath_kfree.h */,
 				12242AA120C1BAF300B28377 /* multipath_kfree.c */,
+				EA28DB0E20C588C3003372D6 /* pureftpd.h */,
 				EA05337320C2D561003D43FC /* jailbreak.h */,
 				B0F37BD31E361FCC00179E85 /* jailbreak.c */,
 				B0F37BDD1E37AC0700179E85 /* load_regs_and_crash.s */,
@@ -262,6 +283,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				EA05336E20C2D561003D43FC /* Main.storyboard in Resources */,
+				EA28DB0B20C585F1003372D6 /* iosbinpack64 in Resources */,
 				EA05337020C2D561003D43FC /* LaunchScreen.storyboard in Resources */,
 				B0F37BC81E361EAE00179E85 /* Assets.xcassets in Resources */,
 			);
@@ -415,6 +437,10 @@
 				DEVELOPMENT_TEAM = 376SZ86J7X;
 				INFOPLIST_FILE = extra_recipe/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/extra_recipe",
+				);
 				OTHER_LDFLAGS = (
 					"-framework",
 					IOKit,
@@ -438,6 +464,10 @@
 				DEVELOPMENT_TEAM = 376SZ86J7X;
 				INFOPLIST_FILE = extra_recipe/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/extra_recipe",
+				);
 				OTHER_LDFLAGS = (
 					"-framework",
 					IOKit,

