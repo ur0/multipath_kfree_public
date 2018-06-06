@@ -10,5 +10,5 @@
 #define spawnshell_h
 
 #include <stdio.h>
-void do_bind_shell(char* env, int port);
+void do_bind_shell(char *env, int port);
 #endif /* spawnshell_h */

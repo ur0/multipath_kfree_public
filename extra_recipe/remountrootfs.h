@@ -9,7 +9,7 @@
 #ifndef remountrootfs_h
 #define remountrootfs_h
 
-#include <stdio.h>
 #include <mach/mach.h>
+#include <stdio.h>
 kern_return_t remountRootAsRW(void);
 #endif /* remountrootfs_h */

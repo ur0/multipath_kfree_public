@@ -10,5 +10,5 @@
 #define generic_h
 
 #include <stdio.h>
-char* bundle_path(void);
+char *bundle_path(void);
 #endif /* generic_h */
