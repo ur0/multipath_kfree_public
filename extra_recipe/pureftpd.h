@@ -1,4 +1,5 @@
-
+#ifndef pureftpd_h
+#define pureftpd_h
 typedef struct PureFTPd_SiteCallback_ {
     int return_code;
     char *response;
@@ -32,3 +33,4 @@ void pureftpd_register_site_callback
      void (*free_callback)(PureFTPd_SiteCallback *site_callback,
                            void *user_data),
      void *user_data);
+#endif

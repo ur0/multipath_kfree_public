@@ -30,6 +30,7 @@ NSTimer* timer;
             [self performSelectorOnMainThread:@selector(updateUI:) withObject:contents_out waitUntilDone:NO];
         }];
     }
+
     // Do any additional setup after loading the view, typically from a nib.
 }
 
@@ -37,12 +38,6 @@ NSTimer* timer;
     if(debuggerAttached) {
         self.logView.text = @"Thanks for debugging me in Xcode";
     }
-    [NSThread detachNewThreadWithBlock:^(void){
-        jb_go();
-        if(!debuggerAttached) {
-            [timer invalidate];
-        }
-    }];
     
 }
 

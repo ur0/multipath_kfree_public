@@ -10,5 +10,6 @@
 #define remountrootfs_h
 
 #include <stdio.h>
-
+#include <mach/mach.h>
+kern_return_t remountRootAsRW(void);
 #endif /* remountrootfs_h */

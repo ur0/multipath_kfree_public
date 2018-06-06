@@ -7,6 +7,10 @@
 
 #include <stdint.h>
 
+#ifndef AF_MULTIPATH
+#define AF_MULTIPATH 39
+#endif
+
 #ifndef multipath_kfree_h
 #define multipath_kfree_h
 
