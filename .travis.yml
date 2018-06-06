@@ -1,0 +1,3 @@
+language: objective-c
+xcode_project: extra_recipe_extra_extra_bug.xcodeproj
+xcode_scheme: extra_recipe
